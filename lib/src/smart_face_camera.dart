@@ -208,40 +208,34 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
         if (cameraController != null && cameraController.value.isInitialized) ...[
           Transform.scale(
             scale: 1.0,
-            child: AspectRatio(
-              aspectRatio: size.aspectRatio,
-              child: OverflowBox(
-                alignment: Alignment.center,
-                child: FittedBox(
-                  fit: BoxFit.fitHeight,
-                  child: SizedBox(
-                    width: size.width,
-                    height: size.width * cameraController.value.aspectRatio,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        _cameraDisplayWidget(),
-                        if (_detectedFace != null) ...[
-                          SizedBox(
-                            width: _detectedFace?.face?.boundingBox.width,
-                            height: _detectedFace?.face?.boundingBox.height,
-                            child: CustomPaint(
-                              painter: FacePainter(
-                                face: _detectedFace!.face,
-                                imageSize: Size(
-                                  _controller!.value.previewSize!.height,
-                                  _controller!.value.previewSize!.width,
-                                ),
-                                isError: widget.isError,
-                                isLoading: widget.isLoading,
-                                isFetched: widget.isFetched,
-                              ),
+            child: OverflowBox(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: size.width,
+                height: size.width * cameraController.value.aspectRatio,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: <Widget>[
+                    _cameraDisplayWidget(),
+                    if (_detectedFace != null) ...[
+                      SizedBox(
+                        width: _detectedFace?.face?.boundingBox.width,
+                        height: _detectedFace?.face?.boundingBox.height,
+                        child: CustomPaint(
+                          painter: FacePainter(
+                            face: _detectedFace!.face,
+                            imageSize: Size(
+                              _controller!.value.previewSize!.height,
+                              _controller!.value.previewSize!.width,
                             ),
-                          )
-                        ]
-                      ],
-                    ),
-                  ),
+                            isError: widget.isError,
+                            isLoading: widget.isLoading,
+                            isFetched: widget.isFetched,
+                          ),
+                        ),
+                      )
+                    ]
+                  ],
                 ),
               ),
             ),
@@ -284,18 +278,23 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
   Widget _cameraDisplayWidget() {
     final CameraController? cameraController = _controller;
     if (cameraController != null && cameraController.value.isInitialized) {
-      return CameraPreview(cameraController, child: Builder(builder: (context) {
-        if (widget.messageBuilder != null) {
-          return widget.messageBuilder!.call(context, _detectedFace);
-        }
-        if (widget.message != null) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
-            child: Text(widget.message!, textAlign: TextAlign.center, style: widget.messageStyle),
-          );
-        }
-        return const SizedBox.shrink();
-      }));
+      return CameraPreview(
+        cameraController,
+        child: Builder(
+          builder: (context) {
+            if (widget.messageBuilder != null) {
+              return widget.messageBuilder!.call(context, _detectedFace);
+            }
+            if (widget.message != null) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
+                child: Text(widget.message!, textAlign: TextAlign.center, style: widget.messageStyle),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+      );
     }
     return const SizedBox.shrink();
   }
